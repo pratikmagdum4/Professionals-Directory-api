@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import Professional from '../models/Professional.js';
 
 export const registerProfessional = async (req, res) => {
-    const { name, email, password, profession, phoneNumber, location } = req.body;
+    const { name, email, password, profession, phoneNumber, city } = req.body;
 
     try {
         const existingUser = await Professional.findOne({ email });
@@ -17,9 +17,9 @@ export const registerProfessional = async (req, res) => {
             password: hashedPassword,
             profession,
             phoneNumber,
-            location,
+            city,
         });
-
+        console.log("the new is ", newProfessional)
         await newProfessional.save();
         res.status(201).json({ message: 'Professional registered successfully' });
     } catch (error) {

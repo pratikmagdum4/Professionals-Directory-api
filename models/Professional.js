@@ -22,11 +22,9 @@ const professionalSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    location: {
-        street: String,
-        city: String,
-        state: String,
-        zipCode: String,
+    city: {
+        type: String,
+        required: true,
     },
 }, { timestamps: true });
 
