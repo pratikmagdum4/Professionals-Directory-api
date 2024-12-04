@@ -5,6 +5,7 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import professionalRoutes from './routes/professionalRoutes.js';
 import professionalProfileRoute from './routes/professionalProfileRoute.js';
+
 dotenv.config();
 connectDB();
 
@@ -12,21 +13,29 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+
 const allowedOrigins = [
-    'http://localhost:5173', // Your React frontend local environment
-    'https://your-erlang-deploy-link.com', // Your Erlang deploy link
-    'https://another-allowed-origin.com', // Add any other origins you need
+    'http://localhost:5173', // Local React environment
+    'https://professionals-directory-new-frontend.vercel.app', // Deployed frontend on Vercel
+    'https://professionals-directory-api-erdi.onrender.com', // API itself if needed
 ];
 
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-}));
+// CORS configuration
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            // Allow requests with no origin (e.g., Postman or server-to-server)
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                console.error(`Blocked by CORS: ${origin}`);
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        credentials: true, // Allow credentials (cookies, auth headers, etc.)
+    })
+);
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/professionals', professionalRoutes);
